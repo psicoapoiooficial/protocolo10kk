@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo 10K | Elegibilidade Confirmada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 20%);
+        }
+
+        /* --- UTILITÁRIOS DE LUXO & 3D --- */
+        .gold-text {
+            background: linear-gradient(to right, #CFB53B, #FFD700, #CFB53B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .neon-border {
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2), inset 0 0 10px rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            padding: 30px 0;
+            animation: fadeInDown 1s ease;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFD700;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        /* --- INTRO SECTION --- */
+        #intro-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .headline {
+            font-size: 2rem;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .sub-headline {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .cta-start {
+            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            color: #000;
+            font-weight: 800;
+            font-size: 1.2rem;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-start:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        .cta-start::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        /* --- QUIZ SECTION --- */
+        #quiz-screen {
+            display: none;
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-top: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #FFD700;
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px #FFD700;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: #1E1E1E;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 20px;
+            text-align: left;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover {
+            background: #252525;
+            border-color: #FFD700;
+            transform: translateY(-3px) translateZ(10px); /* Efeito 3D */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .option-btn.selected {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: #FFD700;
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loading-screen {
+            display: none;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .loader-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top: 8px solid #FFD700;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: #FFD700;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* --- RESULT / SALES PAGE --- */
+        #result-screen {
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+
+        .congrats-banner {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px dashed #00FF00;
+            color: #00FF00;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            background: #000;
+            border: 2px solid #FFD700;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sales-headline {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .sales-sub {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        .cta-buy {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            width: 100%;
+            padding: 25px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #000;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            animation: pulse-glow 2s infinite;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .cta-subtext {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 50px;
+        }
+
+        /* --- SOCIAL PROOF (WHATSAPP STYLE) --- */
+        .social-proof-section {
+            margin-top: 60px;
+            border-top: 1px solid #333;
+            padding-top: 40px;
+        }
+
+        .proof-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #FFD700;
+        }
+
+        .whatsapp-card {
+            background: #075E54;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .whatsapp-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .wa-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .wa-name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .wa-status {
+            font-size: 0.7rem;
+            color: #eee;
+        }
+
+        .wa-image-proof {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 5px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 50px 20px;
+            font-size: 0.8rem;
+            color: #555;
+            border-top: 1px solid #222;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 600px) {
+            .headline { font-size: 1.6rem; }
+            .logo { font-size: 1.8rem; }
+            .quiz-screen { padding: 20px; }
+            .cta-buy { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="logo gold-text">PROTOCOLO 10K</div>
+            <div class="badge">Vagas Limitadas</div>
+        </header>
+
+        <!-- INTRO SCREEN -->
+        <div id="intro-screen">
+            <h1 class="headline">
+                Descubra se você tem o perfil para <span class="gold-text">Ganhar em Dólar</span> e Conquistar sua Liberdade Financeira
+            </h1>
+            <p class="sub-headline">Responda a 7 perguntas rápidas e receba sua análise de elegibilidade.</p>
+            <button class="cta-start" onclick="startQuiz()">
+                Iniciar Análise de Perfil
+            </button>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: #666;">🔒 Seus dados estão seguros. Análise 100% gratuita.</p>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div id="question-container">
+                <h2 id="question-text" class="question-text">Texto da Pergunta</h2>
+                <div id="options-container" class="options-grid">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- LOADING SCREEN (Fake Analysis) -->
+        <div id="loading-screen">
+            <div class="loader-ring"></div>
+            <p class="loading-text">ANALISANDO PERFIL...</p>
+            <p id="loading-subtext" style="color:#666; font-size:0.9rem; margin-top:10px;">Verificando compatibilidade de mercado...</p>
+        </div>
+
+        <!-- RESULT / SALES SCREEN -->
+        <div id="result-screen">
+            <div class="congrats-banner">
+                ✅ APROVADO: SEU PERFIL É COMPATÍVEL COM O PROTOCOLO 10K
+            </div>
+
+            <h2 class="sales-headline">Você Está a Um Passo da Sua <span class="gold-text">Liberdade em Dólar</span></h2>
+            <p class="sales-sub">Assista ao vídeo abaixo para desbloquear seu acesso ao método exclusivo.</p>
+
+            <!-- VÍDEO PLACEHOLDER -->
+            <div class="video-wrapper">
+                <!-- INSIRA O IFRAME DO SEU VÍDEO AQUI -->
+                <!-- Exemplo com imagem de placeholder se não tiver vídeo ainda -->
+                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#000;">
+                    <p style="color:#FFD700; font-size:1.5rem;">[VÍDEO DE VENDAS AQUI]</p>
+                </div>
+                <!-- 
+                <iframe src="LINK_DO_SEU_VIDEO_VIMEO_YOUTUBE" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> 
+                -->
+            </div>
+
+            <!-- CTA -->
+            <a href="LINK_DO_CHECKOUT" class="cta-buy" id="checkout-btn">
+                QUERO ACESSAR O PROTOCOLO 10K AGORA 
+                <span style="display:block; font-size:0.8rem; font-weight:400; color:#000; margin-top:5px;">(Acesso Imediato + Bônus Exclusivos)</span>
+            </a>
+            
+            <p class="cta-subtext">⚠️ Atenção: Esta oferta especial expira assim que você fechar esta página.</p>
+
+            <!-- SOCIAL PROOF (WHATSAPP PRINTS) -->
+            <div class="social-proof-section">
+                <h3 class="proof-title">Resultados Reais de Quem Aplicou o Protocolo:</h3>
+
+                <!-- Print 1 -->
+                <div class="whatsapp-card">
+                    <div class="whatsapp-header">
+                        <!-- Use foto real ou placeholder -->
+                        <img src="https://ui-avatars.com/api/?name=Lucas+Silva&background=FFD700&color=000" class="wa-avatar" alt="User">
+                        <div>
+                            <div class="wa-name">Lucas Silva (Aluno)</div>
+                            <div class="wa-status">online hoje às 09:42</div>
+                        </div>
+                    </div>
+                    <div style="background:#fff; padding:10px; border-radius:8px; position:relative; color:#000; font-size:0.9rem;">
+                        <p>Cara, não tô acreditando! Caiu o pagamento do projeto da Califórnia. <strong>$2.500 dólares na conta!</strong> Isso dá mais de 12 mil reais! Obrigado pelo método!</p>
+                        <!-- LOCAL PARA INSERIR PRINT DO SALDO -->
+                        <!-- <img src="print_saldo_lucas.jpg" class="wa-image-proof"> -->
+                        <div style="text-align:right; font-size:0.7rem; color:#888; margin-top:5px;">09:41</div>
+                    </div>
+                </div>
+
+                <!-- Print 2 -->
+                <div class="whatsapp-card">
+                    <div class="whatsapp-header">
+                        <img src="https://ui-avatars.com/api/?name=Mariana+D&background=FFD700&color=000" class="wa-avatar" alt="User">
+                        <div>
+                            <div class="wa-name">Mariana Design</div>
+                            <div class="wa-status">online ontem</div>
+                        </div>
+                    </div>
+                    <div style="background:#fff; padding:10px; border-radius:8px; position:relative; color:#000; font-size:0.9rem;">
+                        <p>Achei que o inglês ia me travar, mas usei o script do módulo 3 e fechei o contrato. Liberdade financeira finalmente! 🙏</p>
+                        <div style="text-align:right; font-size:0.7rem; color:#888; margin-top:5px;">14:20</div>
+                    </div>
+                </div>
+
+                 <!-- Botão Repetido no final -->
+                 <a href="LINK_DO_CHECKOUT" class="cta-buy" style="margin-top:40px; background: #FFD700; color:#000;">
+                    QUERO MEU PRIMEIRO CONTRATO EM DÓLAR
+                </a>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 Protocolo 10K. Todos os direitos reservados.</p>
+            <p style="margin-top:10px; opacity:0.6;">Este site não é afiliado ao Facebook ou Google. Resultados podem variar.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO DAS PERGUNTAS (Gatilhos Mentais) ---
+        const questions = [
+            {
+                question: "Atualmente, qual é a sua principal área de atuação?",
+                options: [
+                    "💻 Desenvolvimento / Programação",
+                    "🎨 Design / Criativo",
+                    "📱 Marketing Digital / Tráfego",
+                    "🚀 Outra área (Quero migrar)"
+                ]
+            },
+            {
+                question: "Quanto você se sente desvalorizado recebendo em Real hoje?",
+                options: [
+                    "😡 Muito. Trabalho muito e ganho pouco.",
+                    "😕 Um pouco. Dá para viver, mas sem luxos.",
+                    "😐 Estou começando agora."
+                ]
+            },
+            {
+                question: "Qual é a sua meta mensal de ganhos em Dólar?",
+                options: [
+                    "💵 US$ 1.000 - US$ 3.000 (R$ 5k - R$ 15k)",
+                    "💰 US$ 3.000 - US$ 6.000 (R$ 15k - R$ 30k)",
+                    "🤑 Acima de US$ 10.000 (Liberdade Total)"
+                ]
+            },
+            {
+                question: "O que te impede de atingir essa meta hoje? (Sua maior dor)",
+                options: [
+                    "🗣️ Medo do Inglês / Comunicação",
+                    "🗺️ Não sei onde encontrar clientes ricos",
+                    "🤝 Não sei negociar valores altos"
+                ]
+            },
+            {
+                question: "Se eu te der o mapa exato, quanto tempo você pode dedicar?",
+                options: [
+                    "⏱️ 30 min a 1 hora por dia",
+                    "⏱️ 2 a 4 horas por dia",
+                    "🔥 Tempo integral (Quero resultados rápidos)"
+                ]
+            },
+            {
+                question: "Imagine trabalhar de qualquer lugar do mundo ganhando 5x mais. Isso é importante para você?",
+                options: [
+                    "🌍 Sim! Liberdade Geográfica é meu sonho.",
+                    "🏠 Sim, quero trabalhar de casa com conforto.",
+                    "💸 O mais importante é o dinheiro na conta."
+                ]
+            },
+            {
+                question: "Você está pronto para investir em si mesmo para mudar de vida AGORA?",
+                options: [
+                    "🚀 SIM! Estou 100% comprometido.",
+                    "👍 Sim, mas preciso de um método seguro.",
+                    "🤔 Talvez..."
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        
+        // Elementos do DOM
+        const introScreen = document.getElementById('intro-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const loadingScreen = document.getElementById('loading-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const loadingSubtext = document.getElementById('loading-subtext');
+
+        // Link de Pagamento (CONFIGURE AQUI)
+        const CHECKOUT_LINK = "https://pay.kiwify.com.br/mnme91S"; // Coloque seu link real aqui
+        
+        // Atualiza todos os links de botão na página
+        document.querySelectorAll('a[href="LINK_DO_CHECKOUT"]').forEach(link => {
+            link.href = CHECKOUT_LINK;
+        });
+
+        function startQuiz() {
+            introScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const data = questions[currentQuestion];
+            
+            // Animação de fade out/in do texto
+            questionText.style.opacity = 0;
+            optionsContainer.style.opacity = 0;
+            
+            setTimeout(() => {
+                questionText.textContent = data.question;
+                optionsContainer.innerHTML = '';
+
+                data.options.forEach(option => {
+                    const btn = document.createElement('div');
+                    btn.className = 'option-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => selectOption(btn);
+                    optionsContainer.appendChild(btn);
+                });
+
+                // Atualizar barra de progresso
+                const progress = ((currentQuestion) / questions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                // Fade In
+                questionText.style.opacity = 1;
+                optionsContainer.style.opacity = 1;
+            }, 300);
+        }
+
+        function selectOption(btn) {
+            // Visual feedback
+            const allOptions = document.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.style.opacity = '0.5');
+            btn.style.opacity = '1';
+            btn.classList.add('selected');
+            btn.style.borderColor = '#FFD700';
+            btn.style.backgroundColor = 'rgba(255, 215, 0, 0.2)';
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 600);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            quizScreen.style.display = 'none';
+            loadingScreen.style.display = 'block';
+            
+            // Simular análise
+            const statuses = [
+                "Verificando perfil...",
+                "Analisando mercado...",
+                "Calculando potencial de ganhos...",
+                "Gerando plano..."
+            ];
+            
+            let step = 0;
+            const interval = setInterval(() => {
+                if(step < statuses.length) {
+                    loadingSubtext.textContent = statuses[step];
+                    step++;
+                }
+            }, 800);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                loadingScreen.style.display = 'none';
+                resultScreen.style.display = 'block';
+                // Scroll to top smoothly
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
